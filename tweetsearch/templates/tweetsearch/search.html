@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/tweetsearch.css' %}">
+
+<title>TweetsRover</title>
+
+<h1>TweetsRover {% trans "Search" %}</h1>
+
+<form action="" method="post">
+    {% csrf_token %}
+    <input id="search_box" type="text" name="search_phrase" value="{{ phrase }}" maxlength="140" />
+    <input type="submit" value={% trans "Submit" %} />
+    <div class="error">{{ error_message }}</div>
+    {% if tweets %}
+        <div class="result-header">{% trans "Search Results: " %}</div>
+    {% elif phrase %}
+        <div class="result-header">{% trans "No results found. :(" %}</div>
+    {% endif %}
+    {% for tweet in tweets %}
+        <div class="search-result">
+            <a class="picture" href="http://twitter.com/{{ tweet.user.screen_name }}"><img src="{{ tweet.user.profile_image_url }}" /></a>
+            <a class="username" href="http://twitter.com/{{ tweet.user.screen_name }}">{{ tweet.user.name }}</a>
+            <br />
+            <a class="tweet" href="http://twitter.com/user_placeholder/status/{{ tweet.id }}">{% trans tweet.text %}</a>
+            <br />
+        </div>
+    {% endfor %}
+</form>
